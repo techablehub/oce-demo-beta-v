@@ -1,0 +1,1160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Orbit Care Exchange — AI Coordination MVP</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&family=DM+Serif+Display&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.19.0/dist/tabler-icons.min.css" />
+<style>
+*{box-sizing:border-box;margin:0;padding:0}:root{--b50:#E6F1FB;--b100:#B5D4F4;--b200:#85B7EB;--b400:#378ADD;--b600:#185FA5;--b800:#0C447C;--b900:#042C53;--a50:#FAEEDA;--a100:#FAC775;--a800:#633806;--r50:#FCEBEB;--r100:#F7C1C1;--r400:#E24B4A;--r800:#791F1F;--g50:#EAF3DE;--g100:#C0DD97;--g700:#0F6E56;--g800:#27500A;--p50:#F1F0FE;--p100:#CECBF6;--p800:#3C3489;--font:'DM Sans',sans-serif;--serif:'DM Serif Display',serif;--radius:12px;--radius-lg:16px;--radius-xl:24px;--shadow:0 1px 3px rgba(4,44,83,.06),0 8px 24px rgba(4,44,83,.07);--shadow-lg:0 14px 40px rgba(4,44,83,.14)}
+body{background:#f8f9fc;font-family:var(--font);color:var(--b900);font-size:14px;line-height:1.5}
+.topnav{background:#fff;border-bottom:1px solid var(--b100);padding:0 2rem;display:flex;align-items:center;justify-content:space-between;height:58px;position:sticky;top:0;z-index:100;box-shadow:var(--shadow)}
+.logo{font-family:var(--serif);font-size:19px;color:var(--b800);display:flex;align-items:center;gap:8px}
+.logo i{font-size:22px;color:var(--b600)}
+.tabs{display:flex;gap:2px}
+.tab{padding:7px 18px;border-radius:24px;font-size:13px;font-weight:500;cursor:pointer;border:none;background:transparent;color:var(--b600);transition:all .2s;font-family:var(--font)}
+.tab:hover{background:var(--b50)}
+.tab.active{background:var(--b600);color:#fff}
+.section{display:none;padding:1.5rem 2rem;max-width:1300px;margin:0 auto}
+.section.active{display:block}
+.grid2{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.5fr);gap:16px;align-items:start}
+.grid3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+.grid4{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin-bottom:16px}
+.card{background:#fff;border:1px solid var(--b100);border-radius:var(--radius-lg);padding:1.2rem 1.4rem;margin-bottom:14px;box-shadow:var(--shadow)}
+.card-blue{background:var(--b50);border:1px solid var(--b100)}
+.card-title{font-size:13px;font-weight:600;color:var(--b800);text-transform:uppercase;letter-spacing:.5px;margin-bottom:1rem;display:flex;align-items:center;gap:6px}
+.card-title i{font-size:16px}
+.metric{background:var(--b50);border:1px solid var(--b100);border-radius:var(--radius);padding:1rem 1.1rem}
+.metric-lbl{font-size:11px;font-weight:500;color:var(--b600);text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px;display:flex;align-items:center;gap:5px}
+.metric-val{font-size:26px;font-weight:300;color:var(--b900);margin-bottom:2px}
+.metric-sub{font-size:11px;color:var(--b600)}
+.badge{font-size:11px;padding:3px 10px;border-radius:20px;font-weight:600;white-space:nowrap;display:inline-flex;align-items:center;gap:3px}
+.badge-red{background:var(--r50);color:var(--r800);border:1px solid var(--r100)}
+.badge-amber{background:var(--a50);color:var(--a800);border:1px solid var(--a100)}
+.badge-blue{background:var(--b50);color:var(--b800);border:1px solid var(--b100)}
+.badge-green{background:var(--g50);color:var(--g800);border:1px solid var(--g100)}
+.av{width:38px;height:38px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:600;flex-shrink:0}
+.av-b{background:var(--b100);color:var(--b900)}
+.av-t{background:#9FE1CB;color:#04342C}
+.av-a{background:#FAC775;color:#412402}
+.av-c{background:#F5C4B3;color:#4A1B0C}
+.av-p{background:var(--p100);color:var(--p800)}
+.case-row{display:flex;align-items:flex-start;gap:12px;padding:12px;cursor:pointer;border-radius:var(--radius);border:1px solid transparent;transition:all .15s;margin-bottom:8px}
+.case-row:hover{background:var(--b50);border-color:var(--b100)}
+.case-row.sel{background:var(--b50);border-color:var(--b600);border-width:2px;padding:11px}
+.case-info{flex:1;min-width:0}
+.case-name{font-size:14px;font-weight:600;color:var(--b900);margin-bottom:2px}
+.case-sub{font-size:12px;color:var(--b600);margin-bottom:4px}
+.case-detail{font-size:12px;color:var(--b600)}
+.case-reason{font-size:13px;color:var(--b800);line-height:1.6;background:var(--b50);padding:10px 12px;border-radius:var(--radius);border:1px solid var(--b100);margin:8px 0}
+.action-tags{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}
+.action-tag{font-size:11px;padding:3px 8px;background:#fff;border:1px solid var(--b100);border-radius:20px;color:var(--b800);font-weight:500}
+.bar-row{display:flex;align-items:center;gap:8px;margin-bottom:8px}
+.bar-lbl{font-size:12px;color:var(--b600);width:110px;flex-shrink:0}
+.bar-track{flex:1;height:7px;background:var(--b50);border-radius:4px;overflow:hidden;border:1px solid var(--b100)}
+.bar-fill{height:100%;border-radius:4px;transition:width .6s ease;background:var(--b600)}
+.bar-pct{font-size:12px;font-weight:600;color:var(--b900);width:32px;text-align:right}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;padding:10px 18px;border-radius:var(--radius);font-size:13px;font-weight:600;cursor:pointer;border:none;font-family:var(--font);transition:all .2s}
+.btn-primary{background:var(--b600);color:#fff;box-shadow:0 2px 8px rgba(24,95,165,.2)}
+.btn-primary:hover{background:var(--b800);box-shadow:0 4px 12px rgba(24,95,165,.3)}
+.btn-outline{background:#fff;color:var(--b600);border:1px solid var(--b600)}
+.btn-outline:hover{background:var(--b50)}
+.btn-green{background:var(--g700);color:#fff;box-shadow:0 2px 8px rgba(15,110,86,.2)}
+.btn-green:hover{background:var(--g800);box-shadow:0 4px 12px rgba(15,110,86,.3)}
+.btn-amber{background:#BA7517;color:#fff}
+.btn-amber:hover{background:var(--a800)}
+.btn-row{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
+.triage-box{background:var(--b50);border:1px solid var(--b100);border-radius:var(--radius);padding:12px}
+.trow{display:flex;justify-content:space-between;align-items:center;padding:6px 0;font-size:13px;border-bottom:1px solid var(--b100)}
+.trow:last-child{border-bottom:none}
+.tk{color:var(--b600);font-weight:500}
+.tv{font-weight:600;color:var(--b900)}
+.urgbar{height:8px;background:var(--b50);border-radius:4px;border:1px solid var(--b100);overflow:hidden;margin:6px 0}
+.urgbar-fill{height:100%;border-radius:4px}
+.step-row{display:flex;align-items:flex-start;gap:10px;padding:10px 0;border-bottom:1px solid var(--b50)}
+.step-row:last-child{border-bottom:none}
+.snum{width:26px;height:26px;border-radius:50%;background:var(--b50);color:var(--b600);font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;border:1px solid var(--b100)}
+.snum.done{background:var(--g700);color:#fff;border-color:var(--g700)}
+.stxt{font-size:13px;color:var(--b900);flex:1;line-height:1.5}
+.sstatus{font-size:11px;font-weight:600;white-space:nowrap;padding-top:2px;color:var(--b600)}
+.mrow{display:flex;align-items:center;gap:10px;padding:10px 8px;border-bottom:1px solid var(--b50);cursor:pointer;border-radius:var(--radius);transition:background .15s}
+.mrow:last-child{border-bottom:none}
+.mrow:hover{background:var(--b50)}
+.mrow.picked{background:var(--b50);border-left:3px solid var(--b600);padding-left:6px}
+.mi{width:32px;height:32px;border-radius:var(--radius);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.mi-b{background:var(--b100);color:var(--b800)}
+.mi-t{background:#9FE1CB;color:#085041}
+.mi-a{background:#FAC775;color:#633806}
+.mi-p{background:var(--p100);color:var(--p800)}
+.mi-g{background:var(--g100);color:var(--g800)}
+.minfo{flex:1;min-width:0}
+.mname{font-size:13px;font-weight:600;color:var(--b900)}
+.msub{font-size:11px;color:var(--b600);margin-top:1px}
+.mcost{font-size:11px;color:#888;margin-top:2px}
+.mscore{font-size:13px;font-weight:700;color:var(--g700);flex-shrink:0}
+.checkmark{width:20px;height:20px;border-radius:4px;border:2px solid var(--b100);background:transparent;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all .15s;color:transparent}
+.checkmark i{font-size:12px}
+.mrow.picked .checkmark{background:var(--b600);border-color:var(--b600);color:#fff}
+.match-row{display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid var(--b50)}
+.match-row:last-child{border-bottom:none}
+.match-icon{width:32px;height:32px;border-radius:var(--radius);display:flex;align-items:center;justify-content:center;flex-shrink:0;background:var(--b100);color:var(--b800)}
+.match-info{flex:1;min-width:0}
+.match-name{font-size:13px;font-weight:600;color:var(--b900)}
+.match-detail{font-size:11px;color:var(--b600);margin-top:2px}
+.match-pct{font-size:13px;font-weight:700;color:var(--g700)}
+input,select,textarea{font-family:var(--font);font-size:13px;width:100%;padding:9px 12px;border:1px solid var(--b100);border-radius:var(--radius);background:#fff;color:var(--b900);transition:border .15s;margin-bottom:10px}
+input:focus,select:focus,textarea:focus{outline:none;border-color:var(--b600);box-shadow:0 0 0 3px rgba(24,95,165,.1)}
+label{font-size:12px;color:var(--b800);display:block;margin-bottom:4px;font-weight:600}
+.small-note{font-size:12px;color:var(--b600);line-height:1.6}
+.empty{text-align:center;padding:2.5rem 1rem;color:var(--b600)}
+.empty i{font-size:32px;display:block;margin-bottom:10px;color:var(--b100)}
+.empty p{font-size:13px}
+.tl-item{display:flex;gap:10px;padding:5px 0}
+.tl-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;margin-top:6px}
+.tl-txt{font-size:12px;color:var(--b600);flex:1;line-height:1.6}
+.oc-card{background:var(--b50);border:1px solid var(--b100);border-radius:var(--radius);padding:12px;margin-bottom:10px}
+.next-action{display:flex;align-items:flex-start;gap:10px;margin-bottom:8px}
+.next-action-num{width:24px;height:24px;border-radius:50%;background:var(--b600);color:#fff;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.apikey-banner{background:linear-gradient(135deg,var(--b800),var(--b600));color:#fff;padding:12px 16px;border-radius:var(--radius);margin-bottom:16px;display:flex;align-items:center;gap:12px}
+.apikey-banner.connected{background:linear-gradient(135deg,var(--g700),var(--g800))}
+.apikey-banner i{font-size:20px}
+.apikey-content{flex:1}
+.apikey-status{font-size:11px;opacity:.9;margin-top:2px}
+.event-log{margin-top:12px;max-height:300px;overflow-y:auto;border:1px solid var(--b100);border-radius:var(--radius);padding:10px;background:var(--b50)}
+.event-item{display:flex;gap:10px;margin-bottom:10px;font-size:12px}
+.event-item:last-child{margin-bottom:0}
+.event-dot{width:8px;height:8px;border-radius:50%;background:var(--b600);flex-shrink:0;margin-top:4px}
+.timeline-card{background:var(--b50);border:1px solid var(--b100);border-radius:var(--radius);padding:10px;margin-bottom:8px}
+@keyframes spin{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
+</style>
+</head>
+<body>
+<nav class="topnav">
+  <div class="logo"><i class="ti ti-planet"></i>Orbit Care Exchange</div>
+  <div class="tabs">
+    <button class="tab active" onclick="showTab('overview',this)">Overview</button>
+    <button class="tab" onclick="showTab('intake',this)">Live intake</button>
+    <button class="tab" onclick="showTab('caseflow',this)">Case flow</button>
+    <button class="tab" onclick="showTab('exchange',this)">Exchange</button>
+    <button class="tab" onclick="showTab('outcomes',this)">Outcomes</button>
+  </div>
+</nav>
+
+<section id="tab-overview" class="section active">
+  <div class="apikey-banner" id="apikey-banner">
+    <i class="ti ti-key"></i>
+    <div class="apikey-content">
+      <div style="font-weight:600;font-size:14px">Claude AI Integration</div>
+      <div class="apikey-status" id="apikey-status">Status: Demo mode. Intake will use local rules unless an API key is connected.</div>
+    </div>
+    <input type="text" id="apikey-input" placeholder="sk-ant-api..." style="max-width:280px;margin:0;padding:8px 12px;font-size:12px">
+    <button class="btn btn-primary" onclick="saveApiKey()" style="padding:8px 16px">Connect</button>
+    <button class="btn btn-outline" onclick="clearApiKey()" style="padding:8px 16px">Clear</button>
+  </div>
+  <div class="grid4">
+    <div class="metric"><div class="metric-lbl"><i class="ti ti-users"></i>Active cases</div><div class="metric-val" id="m-active">18</div><div class="metric-sub">Being coordinated</div></div>
+    <div class="metric"><div class="metric-lbl"><i class="ti ti-alert-circle"></i>Urgent cases</div><div class="metric-val" style="color:var(--r400)" id="m-urgent">5</div><div class="metric-sub">Score ≥ 80/100</div></div>
+    <div class="metric"><div class="metric-lbl"><i class="ti ti-cpu"></i>AI triaged</div><div class="metric-val" style="color:var(--g700)" id="m-triaged">18</div><div class="metric-sub">This session</div></div>
+    <div class="metric"><div class="metric-lbl"><i class="ti ti-chart-line"></i>Avg match</div><div class="metric-val" style="color:var(--b600)">92%</div><div class="metric-sub">Confidence</div></div>
+  </div>
+  <div class="grid2">
+    <div class="card">
+      <div class="card-title"><i class="ti ti-inbox"></i>Case queue — click to open flow</div>
+      <div id="overview-cases"></div>
+    </div>
+    <div>
+      <div class="card">
+        <div class="card-title"><i class="ti ti-map-pin"></i>Cases by town</div>
+        <div id="town-bars"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="tab-intake" class="section">
+  <div class="card" style="max-width:700px;margin:0 auto">
+    <div class="card-title"><i class="ti ti-forms"></i>Live case intake with AI triage</div>
+    <div class="grid2" style="grid-template-columns:1fr 1fr">
+      <div><label>Elder's name</label><input type="text" id="in-name" placeholder="e.g. Mdm Lee Siew Lan"></div>
+      <div><label>Age</label><input type="number" id="in-age" placeholder="84"></div>
+    </div>
+    <label>Town / estate</label>
+    <select id="in-town"><option value="">Select town…</option><option>Tampines</option><option>Yishun</option><option>Bedok</option><option>Jurong West</option><option>Ang Mo Kio</option><option>Geylang</option><option>Toa Payoh</option><option>Bukit Panjang</option><option>Woodlands</option><option>Sengkang</option></select>
+    <label>Primary care need</label>
+    <select id="in-need"><option value="">Select need…</option><option>Dementia / memory care</option><option>Post-surgery rehab</option><option>Diabetes management</option><option>Daily meals & nutrition</option><option>Mobility & transport</option><option>Stroke recovery</option><option>Mental health support</option><option>End-of-life / palliative</option><option>Fall risk / mobility support</option><option>Caregiver relief / burnout</option></select>
+    <label>Family caregiver stress level</label>
+    <select id="in-stress"><option value="">Select stress level…</option><option>Low — managing well</option><option>Medium — some strain</option><option>High — burnout risk</option><option>Critical — no caregiver</option></select>
+    <label>Subsidy / financial tier</label>
+    <select id="in-subsidy"><option value="">Select tier…</option><option>CHAS Blue (lowest income)</option><option>CHAS Orange</option><option>Pioneer / Merdeka Generation</option><option>MediShield Life only</option><option>Self-paying</option></select>
+    <label>Case notes / situation description</label>
+    <textarea id="in-notes" rows="4" placeholder="Describe the situation: living alone, recent discharge, fall risk, medication issues, family concerns, etc."></textarea>
+    <div class="btn-row">
+      <button class="btn btn-outline" onclick="runDemoScenario()"><i class="ti ti-sparkles"></i>Load demo scenario</button>
+      <button class="btn btn-primary" id="submit-btn" onclick="submitIntake()" style="flex:1">
+        <span id="spinner" style="display:none"><i class="ti ti-loader" style="animation:spin .7s linear infinite"></i></span>
+        <span id="btn-text"><i class="ti ti-robot"></i> Run AI triage now</span>
+      </button>
+    </div>
+    <div id="error-msg" style="display:none;background:var(--r50);border:1px solid var(--r100);border-radius:var(--radius);padding:10px;margin-top:10px;font-size:12px;color:var(--r800)">
+      <i class="ti ti-alert-circle"></i> <span id="error-text"></span>
+    </div>
+  </div>
+  <div class="card" style="max-width:700px;margin:16px auto 0" id="triage-placeholder">
+    <div class="empty"><i class="ti ti-cpu"></i><p>Run AI triage to see urgency score, summary and next actions</p></div>
+  </div>
+  <div class="card" style="max-width:700px;margin:16px auto 0;display:none" id="triage-result">
+    <div class="card-title"><i class="ti ti-cpu"></i>AI Triage result</div>
+    <div class="triage-box">
+      <div class="trow"><span class="tk">Urgency score</span><span class="tv" id="tr-score" style="font-size:20px">—</span></div>
+      <div class="trow"><span class="tk">Assessment level</span><span class="tv"><span id="tr-badge" class="badge">—</span></span></div>
+    </div>
+    <div class="case-reason" style="margin-top:10px" id="tr-summary">—</div>
+    <div style="margin-top:12px">
+      <div style="font-size:12px;font-weight:600;color:var(--b800);margin-bottom:8px;text-transform:uppercase">Recommended next actions</div>
+      <div id="tr-actions"></div>
+    </div>
+    <button class="btn btn-green" onclick="addLiveCaseToFlow()" style="width:100%;margin-top:12px"><i class="ti ti-arrow-right"></i>Add case to matching workflow</button>
+  </div>
+</section>
+
+<section id="tab-caseflow" class="section">
+  <div class="grid2">
+    <div class="card">
+      <div class="card-title"><i class="ti ti-list"></i>Select case for matching</div>
+      <div id="flow-cases"></div>
+    </div>
+    <div id="case-right">
+      <div class="card card-blue empty"><i class="ti ti-arrow-left"></i><p>Select a case from the left to begin coordination workflow</p></div>
+    </div>
+  </div>
+</section>
+
+<section id="tab-exchange" class="section">
+  <div id="exchange-active-case"></div>
+  <div class="grid2">
+    <div class="card">
+      <div class="card-title"><i class="ti ti-user-check"></i>Workers & care providers</div>
+      <div id="worker-board"></div>
+    </div>
+    <div class="card">
+      <div class="card-title"><i class="ti ti-salad"></i>Surplus food & resources</div>
+      <div id="surplus-board"></div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-title"><i class="ti ti-building-plus"></i>Add new partner to registry</div>
+    <div class="grid2" style="grid-template-columns:1fr 1fr">
+      <div><label>Partner name</label><input type="text" id="partner-name" placeholder="Organisation or worker name"></div>
+      <div><label>Type</label><select id="partner-type"><option>Care provider</option><option>Worker</option><option>Surplus supplier</option></select></div>
+    </div>
+    <div class="grid2" style="grid-template-columns:1fr 1fr">
+      <div><label>Coverage area</label><input type="text" id="partner-area" placeholder="e.g. Tampines, Bedok"></div>
+      <div><label>Capacity</label><input type="text" id="partner-capacity" placeholder="e.g. 20 cases/month"></div>
+    </div>
+    <button class="btn btn-green" onclick="addPartner()"><i class="ti ti-plus"></i>Register new partner</button>
+    <div class="event-log" id="partner-list" style="margin-top:12px;max-height:200px">
+      <div class="event-item"><span class="event-dot"></span><span>New partners will appear here once registered.</span></div>
+    </div>
+  </div>
+</section>
+
+<section id="tab-outcomes" class="section">
+  <div id="active-outcome-tracker"></div>
+  <div class="card">
+    <div class="card-title"><i class="ti ti-circle-check"></i>Fulfilled & closed-loop cases</div>
+    <div id="fulfilled-list"></div>
+  </div>
+</section>
+
+<script>
+// ========================================
+// GLOBAL STATE INITIALIZATION (FIXED)
+// ========================================
+function readSessionValue(key){
+  return '';
+}
+function writeSessionValue(key,value){
+  return;
+}
+function removeSessionValue(key){
+  return;
+}
+let _apiKey = readSessionValue('orbit_api_key');
+let selectedCase = -1;
+let picks = {care:{}, work:{}, surp:{}};
+let lastTriageData = null;
+let activeOutcomePlan = null;
+
+// ========================================
+// DATA SOURCES
+// ========================================
+const CASES=[{id:0,name:'Lim Ah Kow',age:82,town:'Tampines',need:'Dementia / memory care',stress:'Critical — no caregiver',subsidy:'Pioneer / Merdeka Generation',urgency:9,score:91,status:'urgent',av:'LK',avcls:'av-c',note:'Referred by Tampines Polyclinic. Daughter overseas. Lives alone in 3-room HDB.',summary:'Urgent dementia care risk with no available caregiver. Immediate welfare check, memory-care placement and family consent workflow are required.',actions:['Assign dementia-trained home caregiver','Refer to senior care centre','Activate family consent and welfare check']},{id:1,name:'Tan Bee Leng',age:74,town:'Yishun',need:'Post-surgery rehab',stress:'High — burnout risk',subsidy:'CHAS Blue (lowest income)',urgency:7,score:74,status:'moderate',av:'TL',avcls:'av-a',note:'Post-hip replacement at Khoo Teck Puat Hospital. Husband primary caregiver, aged 76.',summary:'High rehabilitation need after discharge. Caregiver strain and fall risk suggest prompt rehab coordination within 24–48 hours.',actions:['Book day rehab assessment','Arrange home safety review','Assign physio aide']},{id:2,name:'Wong Siew Hwa',age:69,town:'Bedok',need:'Daily meals & nutrition',stress:'Low — managing well',subsidy:'CHAS Orange',urgency:3,score:38,status:'stable',av:'WH',avcls:'av-t',note:'Lives with adult son. Needs meal delivery Mon–Fri. Interested in senior activity centre.',summary:'Stable case suitable for community routing. Meal support and social engagement can prevent deterioration.',actions:['Route meals surplus','Refer to active ageing centre','Monthly check-in']},{id:3,name:'Rajoo s/o Muthu',age:78,town:'Geylang',need:'Diabetes management',stress:'Medium — some strain',subsidy:'MediShield Life only',urgency:6,score:66,status:'moderate',av:'RM',avcls:'av-b',note:'T2DM with early nephropathy. Attends Geylang Polyclinic. Medication adherence issues.',summary:'Moderate chronic-care risk with adherence concerns. Requires structured diabetes management and medication support.',actions:['Refer chronic disease programme','Assign health aide','Schedule medication adherence check']},{id:4,name:'Mdm Halimah Bte Salleh',age:85,town:'Ang Mo Kio',need:'Stroke recovery',stress:'High — burnout risk',subsidy:'Pioneer / Merdeka Generation',urgency:8,score:84,status:'urgent',av:'HS',avcls:'av-p',note:'Left-sided weakness post-stroke. Discharged from Tan Tock Seng Hospital 2 weeks ago.',summary:'Urgent post-stroke recovery case. Mobility impairment and caregiver strain create fall and readmission risk.',actions:['Book neuro-rehab placement','Assign home therapy aide','Start caregiver training']},{id:5,name:'Chong Fook Meng',age:71,town:'Bukit Panjang',need:'Mental health support',stress:'Medium — some strain',subsidy:'CHAS Orange',urgency:5,score:58,status:'moderate',av:'CF',avcls:'av-t',note:'Mild depression post-retirement. Wife reports social withdrawal. GP referral to IMH.',summary:'Moderate psychosocial risk with social withdrawal. Community mental health and befriending support should be activated.',actions:['Refer counselling support','Assign befriender','Schedule GP follow-up']}];
+
+const TOWNS=[['Tampines',4],['Ang Mo Kio',3],['Yishun',3],['Bedok',2],['Geylang',2],['Bukit Panjang',2],['Jurong West',1],['Woodlands',1]];
+
+const CARE={'Dementia / memory care':[{n:'NTUC Health Senior Care Centre (Tampines)',s:'CHAS-subsidised · Dementia-certified · Mon–Fri',cost:'S$8–18/day after subsidy',sc:97,ic:'ti-building-hospital',cl:'mi-b'},{n:'Apex Home Nursing Services',s:'Certified dementia caregivers · Island-wide',cost:'S$25–40/visit',sc:93,ic:'ti-heart-handshake',cl:'mi-t'},{n:"Alzheimer's Disease Association",s:'Community resource hub · Caregiver support',cost:'Free / means-tested',sc:89,ic:'ti-users',cl:'mi-p'}],'Post-surgery rehab':[{n:"St Luke's Hospital Day Rehab",s:'Physio + OT · CHAS-linked · Transport available',cost:'S$5–15/day subsidised',sc:95,ic:'ti-building-hospital',cl:'mi-b'},{n:'Tan Tock Seng Step-Down Care',s:'Direct referral pathway · Pioneer subsidies',cost:'Class B2/C ward rates',sc:91,ic:'ti-heart-handshake',cl:'mi-t'},{n:'Active Rehab Community Physio',s:'Home visits available',cost:'S$50–80/session',sc:84,ic:'ti-walk',cl:'mi-a'}],'Diabetes management':[{n:'Polyclinic Chronic Disease Management',s:'CDMP enrolled · Existing patient pathway',cost:'S$5–15/visit (CHAS)',sc:96,ic:'ti-stethoscope',cl:'mi-t'},{n:'SingHealth Diabetes Hub',s:'T2DM programme · Dietitian + podiatrist',cost:'CHAS subsidised',sc:92,ic:'ti-building-hospital',cl:'mi-b'},{n:'Diabetic Society of Singapore',s:'Peer support + education programme',cost:'Free',sc:80,ic:'ti-users',cl:'mi-p'}],'Daily meals & nutrition':[{n:'Meals on Wheels',s:'Mon–Fri · Low-sodium · Halal/veg options',cost:'S$2.50–4.50/meal',sc:98,ic:'ti-salad',cl:'mi-g'},{n:'Fei Yue Active Ageing Centre',s:'Lunch programme + exercise class',cost:'S$3/meal',sc:88,ic:'ti-building-community',cl:'mi-b'},{n:'Silver Generation Befrienders',s:'Weekly social visit + meal check-in',cost:'Free volunteer',sc:82,ic:'ti-heart-handshake',cl:'mi-t'}],'Stroke recovery':[{n:'AMK–Thye Hua Kwan Hospital Rehab',s:'Post-stroke rehab ward · Pioneer subsidy',cost:'Class C ward subsidised',sc:96,ic:'ti-building-hospital',cl:'mi-b'},{n:'NTUC Health Home Therapy',s:'Home physio + speech therapy · 3×/week',cost:'S$30–60/session',sc:90,ic:'ti-heart-handshake',cl:'mi-t'},{n:'Stroke Support Station',s:'Caregiver training + peer support group',cost:'Free',sc:85,ic:'ti-users',cl:'mi-p'}],'Mental health support':[{n:'IMH Community Mental Health',s:'GP referral pathway · Home visits',cost:'CHAS subsidised',sc:91,ic:'ti-building-hospital',cl:'mi-b'},{n:'Silver Ribbon Singapore',s:'Counselling + caregiver support hotline',cost:'Free / subsidised',sc:87,ic:'ti-heart-handshake',cl:'mi-t'},{n:'Fei Yue Counselling Centre',s:'Walk-in + appointment · Mandarin available',cost:'S$20–50/session',sc:83,ic:'ti-users',cl:'mi-p'}],'End-of-life / palliative':[{n:'HCA Hospice Care',s:'Home palliative · 24h nurse on-call',cost:'Free donations-based',sc:97,ic:'ti-building-hospital',cl:'mi-b'},{n:'Dover Park Hospice',s:'Inpatient / day hospice · Subsidised beds',cost:'Class B2/C rates',sc:92,ic:'ti-heart-handshake',cl:'mi-t'},{n:'Assisi Hospice',s:'Holistic palliative care',cost:'Means-tested',sc:88,ic:'ti-users',cl:'mi-p'}],'Mobility & transport':[{n:'HandyDart SG',s:'Wheelchair-accessible · Island-wide',cost:'S$15–25/trip',sc:94,ic:'ti-bus',cl:'mi-b'},{n:'Caring Fleet',s:'Volunteer driver network · Advance booking',cost:'Free / token payment',sc:88,ic:'ti-bus',cl:'mi-a'},{n:'Silver Transport',s:'Trained drivers · Phone booking',cost:'Standard fare',sc:81,ic:'ti-bus',cl:'mi-t'}]};
+CARE['Caregiver relief / burnout']=CARE['Dementia / memory care'];CARE['Fall risk / mobility support']=CARE['Mobility & transport'];
+
+const WORK={'Dementia / memory care':[{n:'Mary Tan',s:'SSG Dementia Care Cert. · Tampines/Pasir Ris',cost:'S$14/hr',sc:95,ic:'ti-user-check',cl:'mi-t'},{n:'Priya Nadarajah',s:'Bilingual Tamil/English · Flexi hours',cost:'S$12/hr',sc:90,ic:'ti-user-check',cl:'mi-b'},{n:'David Koh',s:'NTUC LearningHub trained · evenings',cost:'S$11/hr',sc:85,ic:'ti-user-check',cl:'mi-a'}],'Post-surgery rehab':[{n:'Lim Hui Ling',s:'Physio aide · Tue/Thu/Sat',cost:'S$16/hr',sc:93,ic:'ti-user-check',cl:'mi-t'},{n:'Rajendran Kumar',s:'Home Care WSQ · North zone',cost:'S$13/hr',sc:88,ic:'ti-user-check',cl:'mi-b'},{n:'Nurul Ain',s:'OT aide certified · part-time',cost:'S$14/hr',sc:84,ic:'ti-user-check',cl:'mi-a'}],'Diabetes management':[{n:'Chen Wei Liang',s:'Diabetic foot care WSQ',cost:'S$15/hr',sc:92,ic:'ti-user-check',cl:'mi-t'},{n:'Fatimah Osman',s:'Community health aide',cost:'S$12/hr',sc:87,ic:'ti-user-check',cl:'mi-b'},{n:'Ho Mei Ling',s:'SSG nutrition cert.',cost:'S$13/hr',sc:82,ic:'ti-user-check',cl:'mi-a'}],'Daily meals & nutrition':[{n:'Volunteer befriender',s:'Meal delivery + welfare check',cost:'Free',sc:96,ic:'ti-user-check',cl:'mi-t'},{n:'Amirah Zulkifli',s:'Senior activity aide',cost:'S$10/hr',sc:88,ic:'ti-user-check',cl:'mi-b'},{n:'Tan Ah Moi',s:'Meals driver, certified',cost:'S$12/hr',sc:85,ic:'ti-user-check',cl:'mi-a'}],'Stroke recovery':[{n:'Siti Rahimah',s:'Speech therapy aide · TTSH-trained',cost:'S$18/hr',sc:94,ic:'ti-user-check',cl:'mi-t'},{n:'Lee Beng Huat',s:'Stroke Care WSQ',cost:'S$14/hr',sc:89,ic:'ti-user-check',cl:'mi-b'},{n:'Gopal Rajan',s:'Rehab aide cert. · weekends',cost:'S$13/hr',sc:85,ic:'ti-user-check',cl:'mi-a'}],'Mental health support':[{n:'Chua Li Shan',s:'Social worker · IMH-linked',cost:'S$0 govt-salaried',sc:93,ic:'ti-user-check',cl:'mi-t'},{n:'Silver Generation Befriender',s:'Weekly visit · Bukit Panjang',cost:'Free',sc:87,ic:'ti-user-check',cl:'mi-b'},{n:'Mohd Ridwan',s:'Counsellor · bilingual',cost:'S$25/session',sc:82,ic:'ti-user-check',cl:'mi-a'}],'End-of-life / palliative':[{n:'Ng Siew Tin',s:'Palliative care nurse',cost:'Covered by HCA',sc:97,ic:'ti-user-check',cl:'mi-t'},{n:'Pastoral care volunteer',s:'Compassionate support · island-wide',cost:'Free',sc:90,ic:'ti-user-check',cl:'mi-b'},{n:'Zainab Ibrahim',s:'Community care WSQ',cost:'S$14/hr',sc:85,ic:'ti-user-check',cl:'mi-a'}],'Mobility & transport':[{n:'Tan Seng Huat',s:'Wheelchair-certified driver',cost:'S$20/trip',sc:95,ic:'ti-user-check',cl:'mi-t'},{n:'Caring Fleet Volunteer',s:'Mon/Wed/Fri route',cost:'Free',sc:90,ic:'ti-user-check',cl:'mi-b'},{n:'Ramesh Pillai',s:'First-aider transport aide',cost:'Free',sc:83,ic:'ti-user-check',cl:'mi-a'}]};
+WORK['Caregiver relief / burnout']=WORK['Dementia / memory care'];WORK['Fall risk / mobility support']=WORK['Mobility & transport'];
+
+const SURP=[{n:'FairPrice Tampines Hub — daily meal surplus',s:'100–150 cooked meals/day · low-sodium available',cost:'Free donated',sc:98,ic:'ti-salad',cl:'mi-g'},{n:'NTUC FoodFare — unsold hawker meals',s:'Halal options · daily collection',cost:'Free',sc:95,ic:'ti-salad',cl:'mi-g'},{n:'Kopitiam Group — bakery surplus',s:'Bread and pastries · collection by 8pm',cost:'Free',sc:91,ic:'ti-salad',cl:'mi-a'},{n:'Cold Storage — grocery surplus',s:'Fruits, vegetables, dairy near best-before',cost:'Free',sc:88,ic:'ti-shopping-cart',cl:'mi-t'},{n:'SG Enable registry — mobility aids',s:'Wheelchairs, walkers, shower chairs',cost:'Free loan/donation',sc:85,ic:'ti-wheelchair',cl:'mi-b'}];
+
+const FULFILLED=[['Madam Lau Poh Choo, 80','Stroke recovery','Toa Payoh','S$480/mo',['Referred by polyclinic','AI triage urgency 8/10','Matched rehab + home physio aide','Surplus meals routed','Caregiver relief confirmed']],['Mr Ismail Bin Yusof, 76','Diabetes management','Woodlands','S$260/mo',['Self-referred via community outreach','CDMP enrolment recommended','Diabetic foot care aide matched','Weekly grocery surplus routed','Monthly nurse check-in active']],['Mrs Goh Swee Lian, 83','Daily meals & nutrition','Jurong West','S$190/mo',['RC volunteer referral','Nutrition support stable','Meals on Wheels matched','FairPrice meals routed','Weekly welfare check active']]];
+
+// ========================================
+// SYNCHRONIZATION FUNCTION (NEW - FIXES WORKFLOW)
+// ========================================
+function syncAllPages() {
+    render();
+    if(selectedCase >= 0 && selectedCase < CASES.length) {
+        openCase(selectedCase);
+    }
+    if(activeOutcomePlan) {
+        renderActivePlanCard();
+        renderExchangeFocus(activeOutcomePlan);
+        renderOutcomeTracker(activeOutcomePlan);
+    }
+}
+
+// ========================================
+// HELPER FUNCTIONS
+// ========================================
+function showTab(name,el){
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
+  document.getElementById('tab-'+name).classList.add('active');
+  el.classList.add('active');
+}
+
+function saveApiKey(){
+  const val=document.getElementById('apikey-input').value.trim();
+  if(!val.startsWith('sk-ant-')){alert('Anthropic API keys usually start with sk-ant-');return}
+  _apiKey=val;
+  writeSessionValue('orbit_api_key',val);
+  document.getElementById('apikey-banner').classList.add('connected');
+  document.getElementById('apikey-status').textContent='Status: API connected — live Claude triage enabled. Key: '+val.slice(0,10)+'••••'+val.slice(-4);
+}
+
+function clearApiKey(){
+  _apiKey='';
+  removeSessionValue('orbit_api_key');
+  document.getElementById('apikey-banner').classList.remove('connected');
+  document.getElementById('apikey-input').value='';
+  document.getElementById('apikey-status').textContent='Status: Demo mode. Intake will use local rules unless an API key is connected.';
+}
+
+function badge(score){return score>=80?'badge badge-red':score>=60?'badge badge-amber':score>=40?'badge badge-blue':'badge badge-green'}
+function statusFromScore(score){return score>=80?'Urgent':score>=60?'High':score>=40?'Moderate':'Low / Stable'}
+function statusClass(s){return s==='urgent'?'badge badge-red':s==='moderate'?'badge badge-amber':'badge badge-green'}
+function initials(name){const w=name.trim().split(/\s+/);return w.length>1?(w[0][0]+w[w.length-1][0]).toUpperCase():name.slice(0,2).toUpperCase()}
+function fmtTime(){return new Date().toLocaleString('en-SG',{dateStyle:'medium',timeStyle:'short'})}
+function shortProviderName(n){return (n||'').replace(/\s*\([^)]*\)/g,'').split('—')[0].trim()}
+function selectedNames(list){return list.map(m=>shortProviderName(m.n)).join(', ') || 'Not assigned'}
+function ensurePlan(){if(!activeOutcomePlan){alert('Generate an outcome plan from Case flow first.');return false}return true}
+
+function render(){
+  document.getElementById('m-active').textContent=CASES.length;
+  document.getElementById('m-urgent').textContent=CASES.filter(c=>(c.score||c.urgency*10)>=80).length;
+  document.getElementById('m-triaged').textContent=CASES.length;
+  document.getElementById('overview-cases').innerHTML=CASES.map((c,i)=>caseRow(c,i)).join('');
+  document.getElementById('flow-cases').innerHTML=CASES.map((c,i)=>caseRow(c,i)).join('');
+  const townCounts=Object.entries(CASES.reduce((acc,c)=>{
+    const town=c.town||'Singapore';
+    acc[town]=(acc[town]||0)+1;
+    return acc;
+  },{})).sort((a,b)=>b[1]-a[1]||a[0].localeCompare(b[0]));
+  const maxTownCount=Math.max(1,...townCounts.map(t=>t[1]));
+  document.getElementById('town-bars').innerHTML=townCounts.map(t=>`<div class="bar-row"><span class="bar-lbl">${t[0]}</span><div class="bar-track"><div class="bar-fill" style="width:${Math.round(t[1]/maxTownCount*100)}%"></div></div><span class="bar-pct">${t[1]}</span></div>`).join('');
+  document.getElementById('worker-board').innerHTML=Object.values(WORK).flat().slice(0,6).map(m=>simpleMatch(m)).join('');
+  document.getElementById('surplus-board').innerHTML=SURP.map(m=>simpleMatch(m,true)).join('');
+  document.getElementById('fulfilled-list').innerHTML=FULFILLED.map(f=>`<div class="oc-card"><div style="display:flex;justify-content:space-between;gap:8px"><b style="font-size:13px;color:var(--b900)">${f[0]}</b><span class="badge badge-green">Done</span></div><div class="case-detail">${f[1]} · ${f[2]} · Saving: <b>${f[3]}</b></div>${f[4].map((x,i)=>`<div class="tl-item"><span class="tl-dot" style="background:${i===4?'var(--g700)':'var(--b600)'}"></span><span class="tl-txt">${x}</span></div>`).join('')}</div>`).join('');
+}
+
+function caseRow(c,i){
+  return `<div class="case-row ${selectedCase===i?'sel':''}" onclick="openCase(${i})"><div class="av ${c.avcls||'av-b'}">${c.av||initials(c.name)}</div><div class="case-info"><div class="case-name">${c.name}, ${c.age||''}</div><div class="case-sub">${c.town||'Singapore'} · ${c.need}</div><div class="case-reason">${c.summary||c.note||''}</div><div class="action-tags">${(c.actions||[]).slice(0,3).map(a=>`<span class="action-tag">${a}</span>`).join('')}</div></div><span class="${badge(c.score||c.urgency*10)}">${c.score||c.urgency*10}</span></div>`;
+}
+
+function simpleMatch(m,tag){
+  return `<div class="match-row"><div class="match-icon"><i class="ti ${m.ic}"></i></div><div class="match-info"><div class="match-name">${m.n}</div><div class="match-detail">${m.s}</div><div class="bar-track" style="height:4px;margin-top:6px"><div class="bar-fill" style="width:${m.sc}%;background:${tag?'var(--g700)':'var(--b600)'}"></div></div></div><div class="match-pct">${m.sc}%</div></div>`;
+}
+
+// ========================================
+// INTAKE & TRIAGE
+// ========================================
+function runDemoScenario(){
+  document.getElementById('in-name').value='Mdm Lee Siew Lan';
+  document.getElementById('in-age').value='84';
+  document.getElementById('in-town').value='Bukit Panjang';
+  document.getElementById('in-need').value='Fall risk / mobility support';
+  document.getElementById('in-stress').value='High — burnout risk';
+  document.getElementById('in-subsidy').value='Pioneer / Merdeka Generation';
+  document.getElementById('in-notes').value='Lives alone after recent hospital discharge. Daughter visits twice a week. Had two near-falls in the bathroom and forgets medication occasionally. Family is worried but unsure which provider to contact first.';
+}
+
+async function submitIntake(){
+  const name=document.getElementById('in-name').value.trim(),
+        age=parseInt(document.getElementById('in-age').value)||75,
+        town=document.getElementById('in-town').value||'Singapore',
+        need=document.getElementById('in-need').value,
+        stress=document.getElementById('in-stress').value||'Medium — some strain',
+        subsidy=document.getElementById('in-subsidy').value||'MediShield Life only',
+        notes=document.getElementById('in-notes').value.trim();
+  
+  if(!name||!need){alert('Please fill in name and primary care need.');return}
+  
+  const btn=document.getElementById('submit-btn'),
+        sp=document.getElementById('spinner'),
+        bt=document.getElementById('btn-text'),
+        err=document.getElementById('error-msg'),
+        ph=document.getElementById('triage-placeholder'),
+        res=document.getElementById('triage-result');
+  
+  btn.disabled=true;sp.style.display='block';bt.innerHTML='Scoring case...';
+  err.style.display='none';res.style.display='none';ph.style.display='flex';
+  ph.innerHTML='<i class="ti ti-loader" style="animation:spin .7s linear infinite"></i><p>AI triage engine is reading the case...</p>';
+  
+  let triageData=null;
+  
+  if(_apiKey){
+    const prompt=`You are the AI triage engine for Orbit Care Exchange, a Singapore eldercare coordination platform. Analyse this case and respond ONLY with valid raw JSON. Elder: ${name}, ${age}. Town: ${town}. Need: ${need}. Caregiver stress: ${stress}. Subsidy: ${subsidy}. Situation: ${notes||'Not provided'}. Return exactly {"score":0-100,"level":"Urgent|High|Moderate|Low","summary":"2-3 sentence plain-language summary","actions":["specific action 1","specific action 2","specific action 3"]}. Weigh living alone, recent discharge, dementia, fall risk, no family support, caregiver burnout, financial hardship, mobility, end-of-life needs.`;
+    
+    try{
+      const response=await fetch('https://api.anthropic.com/v1/messages',{
+        method:'POST',
+        headers:{'Content-Type':'application/json','x-api-key':_apiKey,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},
+        body:JSON.stringify({model:'claude-sonnet-4-6',max_tokens:1000,messages:[{role:'user',content:prompt}]})
+      });
+      if(!response.ok)throw new Error('API returned '+response.status);
+      const data=await response.json();
+      const raw=data.content.map(i=>i.text||'').join('').replace(/```json|```/g,'').trim();
+      triageData=JSON.parse(raw);
+    }catch(e){
+      document.getElementById('error-text').textContent='Live AI failed, falling back to local demo scoring. '+e.message;
+      err.style.display='flex';
+    }
+  }
+  
+  if(!triageData){triageData=localTriage(need,stress,notes)}
+  
+  lastTriageData={name,age,town,need,stress,subsidy,notes,...triageData};
+  showTriage(lastTriageData);
+  btn.disabled=false;sp.style.display='none';bt.innerHTML='<i class="ti ti-robot"></i> Run AI triage now';
+}
+
+function localTriage(need,stress,notes){
+  let score=35;
+  if(stress.includes('Critical'))score+=35;
+  else if(stress.includes('High'))score+=25;
+  else if(stress.includes('Medium'))score+=12;
+  if(/alone|no caregiver|discharge|fall|dementia|stroke|palliative|burnout|hospital/i.test(notes))score+=20;
+  if(/Dementia|Stroke|End-of-life|Fall risk|Post-surgery/.test(need))score+=12;
+  score=Math.min(96,score);
+  return{
+    score,
+    level:statusFromScore(score).split(' ')[0],
+    summary:`${statusFromScore(score)} case based on ${need.toLowerCase()}, caregiver stress and household risk factors. The platform should coordinate care matching, worker assignment and resource routing before the situation deteriorates.`,
+    actions:['Confirm family consent and contact person','Match suitable care provider and worker','Route subsidy, meals or mobility support where applicable']
+  };
+}
+
+function showTriage(d){
+  const score=Math.round(d.score);
+  document.getElementById('tr-score').textContent=score;
+  const b=document.getElementById('tr-badge');
+  b.className=badge(score);
+  b.textContent=statusFromScore(score);
+  document.getElementById('tr-summary').textContent=d.summary;
+  document.getElementById('tr-actions').innerHTML=(d.actions||[]).map((a,i)=>`<div class="next-action"><div class="next-action-num">${i+1}</div><span>${a}</span></div>`).join('');
+  document.getElementById('triage-placeholder').style.display='none';
+  document.getElementById('triage-result').style.display='block';
+}
+
+function addLiveCaseToFlow(){
+  if(!lastTriageData)return;
+  const d=lastTriageData,score=Math.round(d.score);
+  CASES.unshift({
+    id:CASES.length,
+    name:d.name,
+    age:d.age,
+    town:d.town,
+    need:d.need,
+    stress:d.stress,
+    subsidy:d.subsidy,
+    urgency:Math.round(score/10),
+    score,
+    status:score>=80?'urgent':score>=40?'moderate':'stable',
+    av:initials(d.name),
+    avcls:'av-b',
+    note:d.notes||'Live intake case',
+    summary:d.summary,
+    actions:d.actions
+  });
+  selectedCase=0;
+  picks={care:{},work:{},surp:{}};
+  syncAllPages(); // FIXED: Use syncAllPages instead of just render()
+  openCase(0);
+  showTab('caseflow',document.querySelectorAll('.tab')[2]);
+  document.getElementById('in-name').value='';
+  document.getElementById('in-age').value='';
+  document.getElementById('in-town').value='';
+  document.getElementById('in-need').value='';
+  document.getElementById('in-stress').value='';
+  document.getElementById('in-subsidy').value='';
+  document.getElementById('in-notes').value='';
+  document.getElementById('triage-result').style.display='none';
+  document.getElementById('triage-placeholder').style.display='flex';
+  document.getElementById('triage-placeholder').innerHTML='<i class="ti ti-check" style="color:var(--g700)"></i><p>Case added to matching workflow.</p>';
+}
+
+// ========================================
+// CASE FLOW & MATCHING
+// ========================================
+function openCase(i,opts={}){
+  const caseChanged=selectedCase!==i;
+  selectedCase=i;
+  if(caseChanged||opts.resetPicks){
+    picks={care:{},work:{},surp:{}};
+  }
+  render();
+  const c=CASES[i],
+        score=c.score||c.urgency*10,
+        uc=score>=80?'var(--r400)':score>=60?'#BA7517':'var(--g700)',
+        cares=CARE[c.need]||CARE['Mobility & transport'],
+        workers=WORK[c.need]||WORK['Mobility & transport'];
+  
+  document.getElementById('case-right').innerHTML=`<div class="card"><div class="card-title"><i class="ti ti-user"></i>Case details — AI triage</div><div style="display:flex;align-items:center;gap:10px;margin-bottom:10px"><div class="av ${c.avcls||'av-b'}" style="width:42px;height:42px">${c.av||initials(c.name)}</div><div><div class="case-name">${c.name}, ${c.age}</div><div class="case-detail">${c.town} · ${c.subsidy}</div></div><span class="${badge(score)}" style="margin-left:auto">${score}</span></div><div class="case-reason">${c.summary||c.note}</div><div class="triage-box"><div class="trow"><span class="tk">Urgency score</span><span class="tv" style="color:${uc}">${score}/100</span></div><div class="urgbar"><div class="urgbar-fill" style="width:${score}%;background:${uc}"></div></div><div class="trow"><span class="tk">Care need</span><span class="tv">${c.need}</span></div><div class="trow"><span class="tk">Caregiver stress</span><span class="tv">${c.stress}</span></div></div></div><div class="card"><div class="card-title"><i class="ti ti-building-hospital"></i>Care service matches — tick to select</div>${cares.map((m,idx)=>mrow(m,idx,'care')).join('')}</div><div class="card"><div class="card-title"><i class="ti ti-user-check"></i>Worker matches — tick to select</div>${workers.map((m,idx)=>mrow(m,idx,'work')).join('')}</div><div class="card"><div class="card-title"><i class="ti ti-salad"></i>Surplus resources — tick to select</div>${SURP.slice(0,4).map((m,idx)=>mrow(m,idx,'surp')).join('')}</div><button class="btn btn-green" onclick="confirmPicks(${i})" style="width:100%;padding:12px"><i class="ti ti-check"></i> Confirm selected matches & generate outcome plan</button>`;
+}
+
+function mrow(m,idx,type){
+  return `<div class="mrow ${picks[type][idx]?'picked':''}" id="mrow-${type}-${idx}" onclick="togglePick('${type}',${idx})"><div class="mi ${m.cl}"><i class="ti ${m.ic}"></i></div><div class="minfo"><div class="mname">${m.n}</div><div class="msub">${m.s}</div><div class="mcost">${m.cost}</div></div><div style="display:flex;flex-direction:column;align-items:flex-end;gap:6px"><span class="mscore">${m.sc}%</span><div class="checkmark" id="chk-${type}-${idx}">${picks[type][idx]?'<i class="ti ti-check"></i>':''}</div></div></div>`;
+}
+
+function togglePick(type,idx){
+  picks[type][idx]=!picks[type][idx];
+  const row=document.getElementById(`mrow-${type}-${idx}`),
+        chk=document.getElementById(`chk-${type}-${idx}`);
+  if(picks[type][idx]){
+    row.classList.add('picked');
+    chk.innerHTML='<i class="ti ti-check"></i>';
+  }else{
+    row.classList.remove('picked');
+    chk.innerHTML='';
+  }
+}
+
+function buildNotificationText(p){
+  const c=p.case;
+  return `Orbit Care Exchange approval request for ${c.name}. AI triage score: ${p.score}/100. Proposed care: ${selectedNames(p.selectedCare)}. Worker/support: ${selectedNames(p.selectedWorkers)}. Resource route: ${selectedNames(p.selectedSurplus)}. Estimated fulfilment: ${p.ttf}. Estimated household saving: ${p.saving}. Please approve before any provider contacts the family.`;
+}
+
+function confirmPicks(caseIdx){
+  const c=CASES[caseIdx],
+        cares=CARE[c.need]||CARE['Mobility & transport'],
+        workers=WORK[c.need]||WORK['Mobility & transport'];
+  const ci=Object.keys(picks.care).filter(k=>picks.care[k]),
+        wi=Object.keys(picks.work).filter(k=>picks.work[k]),
+        si=Object.keys(picks.surp).filter(k=>picks.surp[k]);
+  
+  if(!ci.length&&!wi.length&&!si.length){alert('Please select at least one match first.');return}
+  
+  let total=0,cnt=0;
+  ci.forEach(k=>{total+=cares[k].sc;cnt++});
+  wi.forEach(k=>{total+=workers[k].sc;cnt++});
+  si.forEach(k=>{total+=SURP[k].sc;cnt++});
+  
+  const score=c.score||c.urgency*10,
+        avg=Math.round(total/cnt),
+        saving=score>=80?'S$380–520/mo':score>=60?'S$180–320/mo':'S$80–160/mo',
+        ttf=score>=80?'2–4 days':score>=60?'5–10 days':'10–21 days';
+  
+  const selectedCare=ci.map(k=>cares[k]),
+        selectedWorkers=wi.map(k=>workers[k]),
+        selectedSurplus=si.map(k=>SURP[k]);
+  
+  const spareCare=cares.find((m,idx)=>!ci.includes(String(idx)))||cares[0],
+        spareWorker=workers.find((m,idx)=>!wi.includes(String(idx)))||workers[0],
+        spareSurplus=SURP.find((m,idx)=>!si.includes(String(idx)))||SURP[0];
+  
+  const needsReroute=avg<90 || !ci.length || !wi.length || !si.length;
+  
+  activeOutcomePlan={
+    caseIdx,case:c,score,avg,saving,ttf,cnt,
+    selectedCare,selectedWorkers,selectedSurplus,
+    spareCare,spareWorker,spareSurplus,needsReroute,
+    activationId:'OCE-'+String(Date.now()).slice(-6),
+    createdAt:fmtTime(),closedAt:'Not closed yet',
+    consentSentAt:null,consentChannel:null,consentApprovedAt:null,
+    activationLog:[],fulfillment:{care:false,worker:false,surplus:false},
+    fulfillmentLog:[],exceptionLog:[],rematchLog:[],partners:[],
+    status:'Awaiting family approval',
+    planHtml:null
+  };
+  
+  const steps=[
+    ['Case intake — '+c.name,true],
+    ['AI triage completed — score '+score+'/100',true],
+    [selectedCare.length?'Care matched: '+selectedNames(selectedCare):'Care service not selected',!!selectedCare.length],
+    [selectedWorkers.length?'Worker assigned: '+selectedNames(selectedWorkers):'Worker not selected',!!selectedWorkers.length],
+    [selectedSurplus.length?'Surplus routed: '+selectedNames(selectedSurplus):'Surplus not selected',!!selectedSurplus.length],
+    ['Family notification & consent — send approval request before provider contact',false],
+    ['Service activation — timestamp provider referral, worker schedule and delivery route',false],
+    ['Verified fulfilment — monitor completion; trigger re-match if any service falls through',false]
+  ];
+  
+  const existing=document.getElementById('generated-plan-card');
+  if(existing)existing.remove();
+  
+  document.getElementById('case-right').insertAdjacentHTML('beforeend',`<div class="card" id="generated-plan-card" style="border:2px solid var(--b600)"><div class="card-title" style="color:var(--b900)"><i class="ti ti-check"></i>Outcome plan generated</div><div class="triage-box"><div class="trow"><span class="tk">Match confidence</span><span class="tv" style="color:var(--g700)">${avg}%</span></div><div class="trow"><span class="tk">Time to fulfil</span><span class="tv">${ttf}</span></div><div class="trow"><span class="tk">Household saving</span><span class="tv" style="color:var(--g700)">${saving}</span></div><div class="trow"><span class="tk">Selected matches</span><span class="tv">${cnt}</span></div><div class="trow"><span class="tk">Coordination status</span><span class="tv" id="plan-status">Awaiting family approval</span></div></div><div style="margin-top:10px">${steps.map((s,i)=>`<div class="step-row"><div class="snum ${s[1]?'done':''}">${s[1]?'<i class="ti ti-check"></i>':i+1}</div><span class="stxt">${s[0]}</span><span class="sstatus" style="color:${s[1]?'var(--g700)':'var(--b600)'}">${s[1]?'Done':'Pending'}</span></div>`).join('')}</div><div class="btn-row"><button class="btn btn-outline" onclick="sendFamilyNotification('whatsapp')"><i class="ti ti-brand-whatsapp"></i> WhatsApp approval</button><button class="btn btn-outline" onclick="sendFamilyNotification('email')"><i class="ti ti-mail"></i> Email approval</button><button class="btn btn-outline" onclick="sendFamilyNotification('sms')"><i class="ti ti-message"></i> SMS approval</button><button class="btn btn-green" onclick="signOffApproval()"><i class="ti ti-signature"></i> Record sign-off</button></div><div class="btn-row"><button class="btn btn-primary" onclick="activateServices()"><i class="ti ti-player-play"></i> Activate services</button><button class="btn btn-primary" onclick="activateOutcomeTracker()"><i class="ti ti-route"></i> View outcomes tracker</button></div><div class="small-note" style="margin-top:10px">Provider contact is intentionally blocked until family/primary caregiver approval is recorded. Activation logs create timestamps for referral receipt, worker schedule and delivery address routing.</div></div>`);
+  
+  const generatedPlan=document.getElementById('generated-plan-card');
+  if(generatedPlan)activeOutcomePlan.planHtml=generatedPlan.outerHTML;
+  syncAllPages(); // Sync all pages without losing the generated plan
+}
+
+// ========================================
+// NOTIFICATION & ACTIVATION
+// ========================================
+function sendFamilyNotification(channel){
+  if(!ensurePlan())return;
+  const p=activeOutcomePlan,msg=buildNotificationText(p);
+  p.consentSentAt=fmtTime();
+  p.consentChannel=channel;
+  p.status='Approval request sent via '+channel.toUpperCase();
+  
+  if(channel==='whatsapp'){window.open('https://wa.me/?text='+encodeURIComponent(msg),'_blank')}
+  if(channel==='email'){window.location.href='mailto:?subject='+encodeURIComponent('Orbit Care Exchange approval request — '+p.case.name)+'&body='+encodeURIComponent(msg)}
+  if(channel==='sms'){window.location.href='sms:?&body='+encodeURIComponent(msg)}
+  
+  updatePlanStatus();
+  syncAllPages(); // FIXED: Sync after notification
+}
+
+function signOffApproval(){
+  if(!ensurePlan())return;
+  const p=activeOutcomePlan;
+  p.consentApprovedAt=fmtTime();
+  p.status='Family/primary caregiver approved';
+  updatePlanStatus();
+  syncAllPages(); // FIXED: Sync after approval
+  alert('Approval sign-off recorded. Providers can now be contacted.');
+}
+
+function activateServices(){
+  if(!ensurePlan())return;
+  const p=activeOutcomePlan;
+  if(!p.consentApprovedAt){alert('Record family or primary caregiver sign-off before activating services.');return}
+  
+  p.activationLog=[
+    {t:fmtTime(),m:'Home nursing / care provider referral received: '+selectedNames(p.selectedCare)},
+    {t:fmtTime(),m:'Worker schedule issued: '+selectedNames(p.selectedWorkers)},
+    {t:fmtTime(),m:'Surplus meal/resource route sent to delivery address for '+p.case.town}
+  ];
+  p.status='Services activated and fulfilment tracking started';
+  updatePlanStatus();
+  syncAllPages(); // FIXED: Sync after activation
+  showTab('outcomes',document.querySelectorAll('.tab')[4]);
+}
+
+function updatePlanStatus(){
+  const el=document.getElementById('plan-status');
+  if(el&&activeOutcomePlan)el.textContent=activeOutcomePlan.status;
+}
+
+function renderActivePlanCard(){
+  if(!activeOutcomePlan||selectedCase!==activeOutcomePlan.caseIdx||!activeOutcomePlan.planHtml)return;
+  const host=document.getElementById('case-right');
+  if(!host)return;
+  const existing=document.getElementById('generated-plan-card');
+  if(existing)existing.remove();
+  host.insertAdjacentHTML('beforeend',activeOutcomePlan.planHtml);
+  updatePlanStatus();
+}
+
+function activateOutcomeTracker(){
+  if(!activeOutcomePlan){showTab('outcomes',document.querySelectorAll('.tab')[4]);return}
+  syncAllPages(); // FIXED: Sync before showing
+  showTab('outcomes',document.querySelectorAll('.tab')[4]);
+  setTimeout(()=>{
+    const el=document.getElementById('active-outcome-tracker');
+    if(el)el.scrollIntoView({behavior:'smooth',block:'start'});
+  },80);
+}
+
+// ========================================
+// EXCHANGE BOARD
+// ========================================
+function renderExchangeFocus(p){
+  const rerouteWorker=p.spareWorker,rerouteSurp=p.spareSurplus;
+  document.getElementById('exchange-active-case').innerHTML=`<div class="card card-blue"><div class="card-title"><i class="ti ti-route"></i>Active coordination case</div><div class="grid3"><div class="triage-box"><div class="trow"><span class="tk">Case</span><span class="tv">${p.case.name}</span></div><div class="trow"><span class="tk">Status</span><span class="tv">${p.status}</span></div></div><div class="triage-box"><div class="trow"><span class="tk">Approval sent</span><span class="tv">${p.consentSentAt||'Not sent'}</span></div><div class="trow"><span class="tk">Sign-off</span><span class="tv">${p.consentApprovedAt||'Pending'}</span></div></div><div class="triage-box"><div class="trow"><span class="tk">Fulfilment</span><span class="tv">${Object.values(p.fulfillment).filter(Boolean).length}/3 verified</span></div><div class="trow"><span class="tk">Exceptions</span><span class="tv">${p.exceptionLog.length}</span></div></div></div></div>`;
+  
+  document.getElementById('worker-board').innerHTML=`<div class="triage-box" style="margin-bottom:10px"><div class="trow"><span class="tk">Provider contact rule</span><span class="tv">${p.consentApprovedAt?'Unlocked':'Blocked until sign-off'}</span></div><div class="trow"><span class="tk">Care provider</span><span class="tv">${selectedNames(p.selectedCare)}</span></div></div>`+p.selectedWorkers.map(m=>simpleMatch(m)).join('')+`<div class="btn-row"><button class="btn btn-green" onclick="verifyFulfillment('care')"><i class="ti ti-home-check"></i> Verify care visit</button><button class="btn btn-green" onclick="verifyFulfillment('worker')"><i class="ti ti-user-check"></i> Verify worker arrived</button><button class="btn btn-amber" onclick="reportException('provider')"><i class="ti ti-alert-triangle"></i> Provider cancels</button><button class="btn btn-amber" onclick="reportException('worker')"><i class="ti ti-user-x"></i> Worker cancels</button></div>`+(rerouteWorker?`<div class="case-reason"><b>Backup worker held:</b> ${rerouteWorker.n}. Triggered automatically if provider or worker falls through.</div>`:'');
+  
+  document.getElementById('surplus-board').innerHTML=`<div class="triage-box" style="margin-bottom:10px"><div class="trow"><span class="tk">Delivery route</span><span class="tv">${p.case.town} delivery address</span></div><div class="trow"><span class="tk">Monitoring</span><span class="tv">Arrival confirmation required</span></div></div>`+p.selectedSurplus.map(m=>simpleMatch(m,true)).join('')+`<div class="btn-row"><button class="btn btn-green" onclick="verifyFulfillment('surplus')"><i class="ti ti-package-check"></i> Verify meal delivered</button><button class="btn btn-amber" onclick="reportException('surplus')"><i class="ti ti-truck-off"></i> Meal did not arrive</button></div>`+(rerouteSurp?`<div class="case-reason"><b>Fallback surplus route:</b> ${shortProviderName(rerouteSurp.n)} reserved if original meal or equipment route fails.</div>`:'');
+}
+
+// ========================================
+// OUTCOME TRACKER
+// ========================================
+function renderOutcomeTracker(p){
+  const c=p.case,
+        care=selectedNames(p.selectedCare),
+        workers=selectedNames(p.selectedWorkers),
+        surplus=selectedNames(p.selectedSurplus);
+  
+  const approvalStatus=p.consentApprovedAt?'Approved':'Pending sign-off';
+  const activationStatus=p.activationLog.length?'Activated':'Waiting';
+  const verified=Object.values(p.fulfillment).filter(Boolean).length;
+  const closed=verified===3&&p.consentApprovedAt&&p.activationLog.length;
+  
+  if(closed&&p.closedAt==='Not closed yet'){
+    p.closedAt=fmtTime();
+    p.status='Verified fulfilment completed — loop closed';
+  }
+  
+  const loop=[
+    ['1','Intake locked',`Case ${c.name}, ${c.age}, ${c.town} captured with AI triage score ${p.score}/100.`,'Done'],
+    ['2','Exchange matching executed',`Care: ${care}. Worker: ${workers}. Surplus: ${surplus}.`,'Done'],
+    ['3','Family approval gate',`Notification ${p.consentSentAt?'sent via '+p.consentChannel.toUpperCase()+' at '+p.consentSentAt:'not sent yet'}. Sign-off: ${p.consentApprovedAt||'pending'}.`,approvalStatus],
+    ['4','Service activation logging',p.activationLog.length?'Referral, worker schedule and delivery route are timestamped.':'Activation pending until sign-off.',activationStatus],
+    ['5','Fulfilment verification',`Care visit: ${p.fulfillment.care?'verified':'pending'} · Worker: ${p.fulfillment.worker?'verified':'pending'} · Meal/resource: ${p.fulfillment.surplus?'verified':'pending'}.`,verified+'/3'],
+    ['6','Exception detection and re-match',p.exceptionLog.length?`${p.exceptionLog.length} issue(s) detected. Re-match log: ${p.rematchLog.map(x=>x.m).join(' | ')}`:'No fall-through detected. Backup routes remain available.','Live'],
+    ['7','Outcome closure',closed?`Closed at ${p.closedAt}. Case can be added to fulfilled ledger.`:'Not closed. Awaiting verified fulfilment from all service lines.',closed?'Closed':'Open']
+  ];
+  
+  document.getElementById('active-outcome-tracker').innerHTML=`<div class="card" style="border:2px solid ${closed?'var(--g700)':'var(--b600)'};background:linear-gradient(180deg,#fff,${closed?'var(--g50)':'var(--b50)'})"><div class="card-title" style="color:${closed?'var(--g700)':'var(--b900)'}"><i class="ti ti-circle-check"></i>Live outcome tracker — full coordination loop</div><div class="grid3"><div class="triage-box"><div class="trow"><span class="tk">Case</span><span class="tv">${c.name}</span></div><div class="trow"><span class="tk">Match confidence</span><span class="tv" style="color:var(--g700)">${p.avg}%</span></div></div><div class="triage-box"><div class="trow"><span class="tk">Activation ID</span><span class="tv">${p.activationId}</span></div><div class="trow"><span class="tk">Platform status</span><span class="tv">${p.status}</span></div></div><div class="triage-box"><div class="trow"><span class="tk">Verified fulfilment</span><span class="tv" style="color:${closed?'var(--g700)':'var(--a800)'}">${verified}/3</span></div><div class="trow"><span class="tk">Closure</span><span class="tv">${closed?'Closed':'Open'}</span></div></div></div><div style="margin-top:12px">${loop.map(x=>`<div class="step-row timeline-card"><div class="snum ${['Done','Approved','Activated','Closed'].includes(x[3])?'done':''}">${['Done','Approved','Activated','Closed'].includes(x[3])?'<i class="ti ti-check"></i>':x[0]}</div><span class="stxt"><b>${x[1]}</b><br><span class="small-note">${x[2]}</span></span><span class="sstatus">${x[3]}</span></div>`).join('')}</div><div class="btn-row"><button class="btn btn-outline" onclick="sendFamilyNotification('whatsapp')"><i class="ti ti-brand-whatsapp"></i> Send WhatsApp approval</button><button class="btn btn-green" onclick="signOffApproval()"><i class="ti ti-signature"></i> Record family sign-off</button><button class="btn btn-primary" onclick="activateServices()"><i class="ti ti-player-play"></i> Activate services</button><button class="btn btn-outline" onclick="showTab('exchange',document.querySelectorAll('.tab')[3])"><i class="ti ti-arrows-exchange"></i> Open exchange board</button></div><div class="btn-row"><button class="btn btn-green" onclick="verifyFulfillment('care')"><i class="ti ti-home-check"></i> Care fulfilled</button><button class="btn btn-green" onclick="verifyFulfillment('worker')"><i class="ti ti-user-check"></i> Worker arrived</button><button class="btn btn-green" onclick="verifyFulfillment('surplus')"><i class="ti ti-package-check"></i> Meal delivered</button><button class="btn btn-amber" onclick="reportException('provider')"><i class="ti ti-alert-triangle"></i> Simulate provider fall-through</button><button class="btn btn-amber" onclick="reportException('worker')"><i class="ti ti-user-x"></i> Simulate worker cancellation</button><button class="btn btn-amber" onclick="reportException('surplus')"><i class="ti ti-truck-off"></i> Simulate meal missed</button></div><div class="event-log">${[...p.activationLog,...p.fulfillmentLog,...p.exceptionLog,...p.rematchLog].map(e=>`<div class="event-item"><span class="event-dot"></span><span><b>${e.t}</b><br>${e.m}</span></div>`).join('')||'<div class="event-item"><span class="event-dot"></span><span>No event logs yet. Send approval, record sign-off and activate services to begin tracking.</span></div>'}</div><button class="btn btn-green" onclick="markOutcomeLedger()" style="width:100%;margin-top:12px"><i class="ti ti-file-check"></i> Add closed case to fulfilled ledger</button></div>`;
+}
+
+function verifyFulfillment(type){
+  if(!ensurePlan())return;
+  const p=activeOutcomePlan;
+  if(!p.activationLog.length){alert('Activate services before verifying fulfilment.');return}
+  
+  p.fulfillment[type]=true;
+  const label=type==='care'?'Care provider completed first visit':type==='worker'?'Worker arrived and schedule started':'Surplus meal/resource delivered to address';
+  p.fulfillmentLog.push({t:fmtTime(),m:label});
+  
+  // FIXED: Logic error - added .length
+  p.status=Object.values(p.fulfillment).filter(Boolean).length===3?'Verified fulfilment completed — loop closed':'Fulfilment tracking in progress';
+  syncAllPages(); // FIXED: Sync after verification
+}
+
+function reportException(type){
+  if(!ensurePlan())return;
+  const p=activeOutcomePlan;
+  const label=type==='provider'?'Care provider cancelled / could not accept referral':type==='worker'?'Assigned worker cancelled or no-show':'Meal/resource route failed or did not arrive';
+  p.exceptionLog.push({t:fmtTime(),m:label});
+  triggerRematch(type);
+}
+
+function triggerRematch(type){
+  const p=activeOutcomePlan;
+  let replacement='';
+  if(type==='provider')replacement=shortProviderName(p.spareCare.n);
+  else if(type==='worker')replacement=shortProviderName(p.spareWorker.n);
+  else replacement=shortProviderName(p.spareSurplus.n);
+  
+  p.rematchLog.push({t:fmtTime(),m:`Auto re-match triggered for ${type}. New fallback assigned: ${replacement}.`});
+  p.status='Exception detected — re-match triggered';
+  syncAllPages(); // FIXED: Sync after re-match
+  showTab('exchange',document.querySelectorAll('.tab')[3]);
+}
+
+function addPartner(){
+  const name=document.getElementById('partner-name').value.trim(),
+        type=document.getElementById('partner-type').value,
+        area=document.getElementById('partner-area').value.trim(),
+        capacity=document.getElementById('partner-capacity').value.trim();
+  
+  if(!name){alert('Please enter a partner name.');return}
+  
+  const entry={t:fmtTime(),m:`${name} added as ${type}. Area: ${area||'TBC'}. Capacity: ${capacity||'TBC'}.`};
+  if(activeOutcomePlan){activeOutcomePlan.partners.push(entry)}
+  
+  const list=document.getElementById('partner-list');
+  list.insertAdjacentHTML('afterbegin',`<div class="event-item"><span class="event-dot"></span><span><b>${entry.t}</b><br>${entry.m}</span></div>`);
+  
+  ['partner-name','partner-area','partner-capacity'].forEach(id=>document.getElementById(id).value='');
+  syncAllPages(); // FIXED: Sync after adding partner
+}
+
+function markOutcomeLedger(){
+  if(!activeOutcomePlan)return;
+  const p=activeOutcomePlan,c=p.case;
+  
+  // FIXED: Logic error - added .length
+  if(Object.values(p.fulfillment).filter(Boolean).length<3){
+    alert('The loop is not fully closed yet. Verify care, worker and meal/resource fulfilment first.');
+    return;
+  }
+  
+  FULFILLED.unshift([
+    `${c.name}, ${c.age}`,
+    c.need,
+    c.town,
+    p.saving,
+    [
+      `AI triage completed at ${p.score}/100`,
+      `Family approval recorded: ${p.consentApprovedAt||'N/A'}`,
+      `Activation ${p.activationId} logged`,
+      `Verified fulfilment: care, worker and surplus route completed`,
+      `${p.exceptionLog.length?p.exceptionLog.length+' exception(s) rematched':'No fall-through detected'}`
+    ]
+  ]);
+  
+  syncAllPages(); // FIXED: Sync after marking complete
+  alert('Outcome added to fulfilled ledger. The case is now closed-loop verified.');
+}
+
+// ========================================
+// INITIALIZATION (FIXED)
+// ========================================
+window.addEventListener('DOMContentLoaded', function() {
+    // Restore API key if exists
+    if(_apiKey) {
+        document.getElementById('apikey-input').value = _apiKey;
+        saveApiKey();
+    }
+    
+    // Initial render
+    render();
+    
+    // Initialize empty states for Exchange and Outcomes tabs
+    document.getElementById('exchange-active-case').innerHTML = '<div class="card card-blue"><div class="empty"><i class="ti ti-arrow-left"></i><p>Generate an outcome plan from Case Flow to activate the exchange board.</p></div></div>';
+    
+    document.getElementById('active-outcome-tracker').innerHTML = '<div class="card"><div class="empty"><i class="ti ti-route"></i><p>No active outcome tracking yet. Complete the full case flow to see live coordination tracking here.</p></div></div>';
+});
+</script>
+<script data-pplx-inline-edit>
+(function () {
+  if (window === window.top) return;
+
+  const allowedParentOrigins = ["https://www.perplexity.ai","https://perplexity.ai","https://testing.perplexity.ai","https://staging.perplexity.ai","https://*.preview.i.perplexity.ai","http://localhost:3000","http://127.0.0.1:3000","http://localhost:5173","http://127.0.0.1:5173"];
+  const MAX_FONT_BYTES = 500 * 1024;
+  const MAX_TOTAL_FONT_BYTES = 2 * 1024 * 1024;
+  let scrollForwarding = false;
+  let scrollRaf = 0;
+  let trustedTopOrigin = null;
+
+  // Allow entries like "https://*.preview.i.perplexity.ai" — the wildcard
+  // matches a single DNS label (no dots), so "https://*.foo" cannot stretch
+  // across multiple labels.
+  function matchesAllowedOrigin(origin) {
+    if (!origin) return false;
+    for (const entry of allowedParentOrigins) {
+      if (!entry.includes("*")) {
+        if (entry === origin) return true;
+        continue;
+      }
+      const pattern = new RegExp(
+        "^" +
+          entry.replace(/[.+?^${}()|[\]\\]/g, "\\$&").replace(/\*/g, "[^.]+") +
+          "$",
+      );
+      if (pattern.test(origin)) return true;
+    }
+    return false;
+  }
+
+  // Trust decision: when the sender is same-origin-visible (event.origin is a
+  // real origin like https://www.perplexity.ai) we trust event.origin directly.
+  // When event.origin is "null" (opaque broker srcdoc), we fall back to the
+  // broker's stamped `parentOrigin` to identify the top window. The fallback
+  // is claim-only — we rely on the browser's native `targetOrigin` enforcement
+  // on the response path (see postToTrustedTop) to ensure replies can't be
+  // delivered to anyone but the actual top window of that claimed origin.
+  function getTrustedParentOrigin(event) {
+    const forwardedParentOrigin =
+      typeof event.data.parentOrigin === "string" ? event.data.parentOrigin : null;
+    const parentOrigin = event.origin === "null" ? forwardedParentOrigin : event.origin;
+    return matchesAllowedOrigin(parentOrigin) ? parentOrigin : null;
+  }
+
+  // All responses go to window.top with targetOrigin = the allowlisted origin.
+  // An attacker that iframes us inside their own null-origin broker can claim
+  // any parentOrigin they like, but the browser will drop the reply whenever
+  // the real top's origin doesn't match — so the screenshot never leaves.
+  function postToTrustedTop(message) {
+    if (!trustedTopOrigin) return;
+    try {
+      window.top.postMessage(message, trustedTopOrigin);
+    } catch (_error) {}
+  }
+
+  function inlineAll(original, clone) {
+    if (original.nodeType !== 1 || clone.nodeType !== 1) return;
+
+    try {
+      const computedStyle = getComputedStyle(original);
+      // cssText on a computed style is the serialized declaration in modern
+      // Chromium/Safari — a single read beats enumerating ~400 longhand
+      // properties. Firefox returns "" here, so we fall back on empty.
+      const serialized = computedStyle.cssText;
+      if (serialized) {
+        clone.style.cssText = serialized;
+      } else {
+        const parts = new Array(computedStyle.length);
+        for (let index = 0; index < computedStyle.length; index += 1) {
+          const property = computedStyle[index];
+          parts[index] = `${property}:${computedStyle.getPropertyValue(property)};`;
+        }
+        clone.style.cssText = parts.join("");
+      }
+    } catch (_error) {}
+
+    const originalChildren = original.children;
+    const clonedChildren = clone.children;
+    for (
+      let index = 0;
+      index < originalChildren.length && index < clonedChildren.length;
+      index += 1
+    ) {
+      inlineAll(originalChildren[index], clonedChildren[index]);
+    }
+  }
+
+  function extractFontUrl(srcValue) {
+    const matches = [
+      ...srcValue.matchAll(
+        /url\(["']?([^"')]+)["']?\)(?:\s*format\(["']?([^"')]+)["']?\))?/gi,
+      ),
+    ];
+    if (matches.length === 0) return null;
+    const woff2 = matches.find((m) => m[2] && m[2].toLowerCase().includes("woff2"));
+    if (woff2) return woff2[1];
+    const woff = matches.find((m) => m[2] && m[2].toLowerCase().includes("woff"));
+    if (woff) return woff[1];
+    return matches[0][1];
+  }
+
+  // Cache resolved font URL -> data URI across captures. Fonts on a page
+  // essentially never change, and a batch run emits multiple captures back to
+  // back — without this we'd refetch + re-base64 every time.
+  const fontDataUriCache = new Map();
+  const SRC_DECLARATION_RE = /src\s*:\s*[^;}]+/i;
+
+  async function fetchAsDataUri(url) {
+    if (fontDataUriCache.has(url)) return fontDataUriCache.get(url);
+    let dataUri = null;
+    try {
+      const response = await fetch(url, { mode: "cors", credentials: "omit" });
+      if (response.ok) {
+        const blob = await response.blob();
+        if (blob.size <= MAX_FONT_BYTES) {
+          dataUri = await new Promise((resolve) => {
+            const reader = new FileReader();
+            reader.onloadend = () =>
+              resolve(typeof reader.result === "string" ? reader.result : null);
+            reader.onerror = () => resolve(null);
+            reader.readAsDataURL(blob);
+          });
+        }
+      }
+    } catch (_error) {
+      dataUri = null;
+    }
+    fontDataUriCache.set(url, dataUri);
+    return dataUri;
+  }
+
+  function collectFontFaceRuleTexts() {
+    const rules = [];
+    for (const sheet of document.styleSheets) {
+      let cssRules;
+      try {
+        cssRules = sheet.cssRules;
+      } catch (_error) {
+        continue;
+      }
+      if (!cssRules) continue;
+      for (const rule of cssRules) {
+        const cssText = rule.cssText || "";
+        if (cssText.startsWith("@font-face")) rules.push(cssText);
+      }
+    }
+    return rules;
+  }
+
+  async function buildInlinedFontCss() {
+    const ruleTexts = collectFontFaceRuleTexts();
+    if (ruleTexts.length === 0) return null;
+
+    const resolved = ruleTexts.map((cssText) => {
+      if (!SRC_DECLARATION_RE.test(cssText)) return null;
+      const srcMatch = cssText.match(/src\s*:\s*([^;}]+)[;}]/i);
+      if (!srcMatch) return null;
+      const url = extractFontUrl(srcMatch[1]);
+      if (!url) return null;
+      try {
+        return { cssText, url: new URL(url, document.baseURI).href };
+      } catch (_error) {
+        return null;
+      }
+    });
+
+    const dataUris = await Promise.all(
+      resolved.map((entry) => (entry ? fetchAsDataUri(entry.url) : Promise.resolve(null))),
+    );
+
+    const inlined = [];
+    let totalBytes = 0;
+    for (let index = 0; index < resolved.length; index += 1) {
+      const entry = resolved[index];
+      const dataUri = dataUris[index];
+      if (!entry || !dataUri) continue;
+      const approxBytes = dataUri.length * 0.75;
+      if (totalBytes + approxBytes > MAX_TOTAL_FONT_BYTES) break;
+      totalBytes += approxBytes;
+      inlined.push(entry.cssText.replace(SRC_DECLARATION_RE, `src: url("${dataUri}")`));
+    }
+    return inlined.length > 0 ? inlined.join("\n") : null;
+  }
+
+  function stripExternal(clone) {
+    const images = clone.querySelectorAll("img");
+    for (let index = 0; index < images.length; index += 1) {
+      const src = images[index].getAttribute("src");
+      if (src && !src.startsWith("data:")) images[index].removeAttribute("src");
+    }
+
+    const elements = clone.querySelectorAll("*");
+    for (let index = 0; index < elements.length; index += 1) {
+      const style = elements[index].style.cssText;
+      if (style && style.includes("url(")) {
+        elements[index].style.cssText = style.replace(
+          /url\(["']?(?!data:)[^)"']*["']?\)/gi,
+          "none",
+        );
+      }
+    }
+  }
+
+  function emitScroll() {
+    scrollRaf = 0;
+    if (!scrollForwarding) return;
+    postToTrustedTop({
+      type: "INLINE_EDIT_SCROLL",
+      scrollX: window.scrollX,
+      scrollY: window.scrollY,
+    });
+  }
+
+  window.addEventListener(
+    "scroll",
+    function () {
+      if (!scrollForwarding || scrollRaf) return;
+      scrollRaf = requestAnimationFrame(emitScroll);
+    },
+    { passive: true, capture: true },
+  );
+
+  async function handleCaptureRequest(event) {
+    const requestId = event.data.requestId;
+    const scrollX = window.scrollX;
+    const scrollY = window.scrollY;
+    const width = window.innerWidth;
+    const height = window.innerHeight;
+
+    function postResult(dataUrl) {
+      postToTrustedTop({
+        type: "INLINE_EDIT_SCREENSHOT_RESULT",
+        requestId,
+        dataUrl,
+        scrollX,
+        scrollY,
+      });
+    }
+
+    try {
+      // Wait for any pending web fonts to resolve so both inline metrics and
+      // the @font-face inlining below see the same loaded faces.
+      if (document.fonts && document.fonts.ready) {
+        try {
+          await document.fonts.ready;
+        } catch (_error) {}
+      }
+
+      const clone = document.documentElement.cloneNode(true);
+      inlineAll(document.documentElement, clone);
+
+      const removedNodes = clone.querySelectorAll("script,link[rel=\"stylesheet\"],style");
+      for (let index = 0; index < removedNodes.length; index += 1) {
+        removedNodes[index].remove();
+      }
+
+      stripExternal(clone);
+
+      // Re-embed web fonts as data-URI @font-face rules so the SVG rasterizer
+      // can resolve them — external font URLs aren't fetched during
+      // foreignObject rendering, which would otherwise force a fallback face
+      // and change text metrics.
+      const inlinedFontCss = await buildInlinedFontCss();
+      if (inlinedFontCss) {
+        const styleEl = document.createElement("style");
+        styleEl.textContent = inlinedFontCss;
+        const head = clone.querySelector("head");
+        if (head) head.appendChild(styleEl);
+        else clone.insertBefore(styleEl, clone.firstChild);
+      }
+
+      const html = new XMLSerializer().serializeToString(clone);
+      const svg =
+        `<svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${height}">` +
+        '<foreignObject width="100%" height="100%">' +
+        `<div xmlns="http://www.w3.org/1999/xhtml" style="width:${width}px;height:${height}px;overflow:hidden">` +
+        `<div style="position:relative;left:-${scrollX}px;top:-${scrollY}px">` +
+        html +
+        "</div></div></foreignObject></svg>";
+      const svgUrl = `data:image/svg+xml;charset=utf-8,${encodeURIComponent(svg)}`;
+      const image = new Image();
+      image.onload = function () {
+        const canvas = document.createElement("canvas");
+        canvas.width = width;
+        canvas.height = height;
+        canvas.getContext("2d").drawImage(image, 0, 0);
+        postResult(canvas.toDataURL("image/png"));
+      };
+      image.onerror = function () {
+        postResult(null);
+      };
+      image.src = svgUrl;
+    } catch (_error) {
+      postResult(null);
+    }
+  }
+
+  window.addEventListener("message", function (event) {
+    if (!event.data) return;
+    // Only accept messages from the direct parent frame. Blocks sibling /
+    // unrelated-window postMessage senders that could otherwise reach us.
+    if (event.source !== window.parent) return;
+
+    const trustedParentOrigin = getTrustedParentOrigin(event);
+    if (!trustedParentOrigin) return;
+    trustedTopOrigin = trustedParentOrigin;
+
+    if (event.data.type === "INLINE_EDIT_SCROLL_START") {
+      scrollForwarding = true;
+      emitScroll();
+      return;
+    }
+
+    if (event.data.type === "INLINE_EDIT_SCROLL_STOP") {
+      scrollForwarding = false;
+      if (scrollRaf) cancelAnimationFrame(scrollRaf);
+      scrollRaf = 0;
+      return;
+    }
+
+    if (event.data.type !== "INLINE_EDIT_CAPTURE_REQUEST") return;
+
+    handleCaptureRequest(event);
+  });
+})();
+
+
+</script></body>
+</html>
